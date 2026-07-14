@@ -18,4 +18,5 @@ Everything needed to recreate my Claude skills and workflows on a new machine.
 
 ## Skills
 
+- [`/heuristic-review`](skills/heuristic-review/SKILL.md) — run a 5-reviewer UX heuristic evaluation of a website and produce a client-ready HTML report styled like olliebarr.com
 - [`/screenshot-bridge`](skills/screenshot-bridge/SKILL.md) — capture website screenshots and upload them to a Figma moodboard grid

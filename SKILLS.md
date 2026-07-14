@@ -18,6 +18,61 @@ Some skills also depend on an **MCP server** — a small background program runn
 
 ## Skills
 
+### `/heuristic-review`
+
+#### Plain English
+
+This skill lets you say something like:
+
+> "Run a heuristic review of acmewidgets.com's homepage and checkout page."
+
+Claude will:
+1. Ask which URL(s) or flow to review, and the client/product name
+2. Capture a full-page screenshot of each page, plus its page structure and any console errors, using the `screenshot-bridge` MCP server and the `claude-in-chrome` browser extension
+3. Spawn 5 independent Claude subagents in parallel — accessibility, usability & flow, legibility & readability, colour & visual contrast, and content clarity & microcopy — each reviewing the same evidence separately and producing findings against Jakob Nielsen's 10 usability heuristics (this mirrors Nielsen Norman Group's own recommended methodology of 3–5 independent evaluators)
+4. Merge the 5 sets of findings, flagging anything more than one reviewer independently spotted, rate each by Nielsen's 0–4 severity scale plus a plain-English business-impact note, and map each to one of Ollie's actual services
+5. Build a single, self-contained HTML report styled to match olliebarr.com (same fonts, colours, spacing, card/button patterns) — with embedded screenshots, so it's a single file with no external dependencies
+6. Save it to `~/Desktop/heuristic-reviews/<client-slug>-<date>/report.html`, ready to upload to hosting
+
+It was built as both a genuine UX audit tool and a client-prospecting tool: the report's closing section explicitly maps the problems found to Ollie's services, with a contact CTA.
+
+#### What it's made of
+
+| Part | What it is | Where it lives |
+|---|---|---|
+| Skill instruction file | Tells Claude the full workflow | `~/.claude/skills/heuristic-review/SKILL.md` |
+| `references/heuristics.md` | Full text of the 10 heuristics, Nielsen's severity scale, and methodology notes | `~/.claude/skills/heuristic-review/references/heuristics.md` |
+| `references/services.md` | Ollie's real services + a problem→service mapping table — **edit this file directly** when services change | `~/.claude/skills/heuristic-review/references/services.md` |
+| `references/style-guide.md` | olliebarr.com's design tokens (colours/type/spacing/components), pulled from the `olliebarr-com` GitHub repo | `~/.claude/skills/heuristic-review/references/style-guide.md` |
+| `assets/report-template.html` | Pre-styled HTML/CSS report skeleton with placeholder markers, so Claude fills in content rather than rebuilding CSS each run | `~/.claude/skills/heuristic-review/assets/report-template.html` |
+| `assets/fonts/albert-sans-variable-latin.woff2` | Self-hosted site font, embedded as base64 in every generated report | `~/.claude/skills/heuristic-review/assets/fonts/` |
+
+Depends on the same `screenshot-bridge` MCP server as the skill above, plus the `claude-in-chrome` browser extension (for reading page structure/console errors — a built-in Claude Code integration, no separate install).
+
+#### Setup on a new machine
+
+**Prerequisites**
+- Everything `screenshot-bridge` needs (see above) — this skill reuses the same MCP server for screenshots
+- The `claude-in-chrome` browser extension connected
+
+**Step 1 — Copy the skill folder**
+
+```bash
+mkdir -p ~/.claude/skills/heuristic-review
+# then copy the entire skills/heuristic-review/ folder from this repo into ~/.claude/skills/heuristic-review/
+```
+
+**Step 2 — Verify**
+
+Start a new Claude Code session and type `/heuristic-review` — Claude should recognise it and ask which URL(s) to review.
+
+#### Notes and known limitations
+
+- **Don't repeat the same screenshot on every finding card.** If several findings are on the same page, embed one full-page screenshot once as a shared reference, and only attach individual images to cards where they're genuinely illustrative — otherwise the report file balloons (a 300KB screenshot repeated 15 times is 4.5MB of pure duplication). Learned this the hard way during the first end-to-end test run.
+- **Services list changes over time.** `references/services.md` is meant to be edited directly whenever Ollie's offerings change — the skill re-reads it every run rather than caching anything.
+- **5 subagents never touch the browser directly.** All screenshots/page-structure/console data are gathered once by the orchestrating Claude session and saved to disk; the 5 analyst agents only read that saved evidence. This avoids 5 agents fighting over the same real Chrome tab.
+- **Styling is baked in, not re-fetched live.** If olliebarr.com's design changes, re-clone the `olliebarr-com` repo and refresh `references/style-guide.md` and the CSS in `assets/report-template.html` — the skill won't notice a live site change on its own.
+
 ### `/screenshot-bridge`
 
 #### Plain English
