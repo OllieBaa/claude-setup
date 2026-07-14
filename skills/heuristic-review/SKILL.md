@@ -44,6 +44,10 @@ Create a scratch evidence folder, e.g. `/tmp/heuristic-review-evidence-<slug>/`.
 
 Don't skip the screenshot step even if you think you already have a mental picture of the page — the analyst agents need an actual file path to `Read`.
 
+**Interactive flows (signup, multi-step forms, gated content) need a different approach.** `screenshot-bridge` only works for a single fresh page load — it can't click through a flow. For that, drive it yourself with `claude-in-chrome`'s `computer`/`navigate`/`find` tools. But its screenshots (even with `save_to_disk: true`) only render inline in the conversation — they are **not** written to any path your `Bash`/`Read` tools can reach (confirmed: they pass over a socket to the extension, nothing lands on disk). So for anything beyond the entry page: step through the flow yourself, and after each screenshot you're shown, immediately write down exactly what you saw into a plain-text evidence file (what's on screen, what you clicked, what happened) — you're a first-hand witness, and an accurate written account is a legitimate substitute for an image the analyst agents can't be given anyway. Note in that file that there are no images for this part and why.
+
+**Entering data into forms mid-flow requires the user's permission first**, per this session's standing rules (entering personal data into a form, or submitting one, isn't something to do unprompted). If a flow is gated behind signup, stop, tell the user what you've found so far and that the gate blocks further review, and ask how they want to proceed (skip the gated part, or give you a name/email to use). Don't guess or invent fake credentials yourself.
+
 ---
 
 ## Step 3 — Spawn 5 independent analyst agents, in parallel
