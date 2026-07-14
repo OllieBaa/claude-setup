@@ -82,6 +82,7 @@ Wait for all 5 to complete before moving on.
 Read all 5 agents' findings together. For each:
 - **Merge duplicates**: if two or more agents describe the same underlying problem (same page/element), even worded differently, merge into one finding and note how many independently flagged it. This is the strongest signal in the report — surface it.
 - **Sort by severity**, 4 → 1.
+- **Number them sequentially** in that sorted order (1, 2, 3…) — this number is what both the finding card itself and the closing services section refer to, so it must be assigned before you start building the report, not invented ad hoc while writing either section.
 - **Map to services**: read `references/services.md` and assign each finding (or finding group) the most relevant service(s). Don't force a mapping where none fits — see the "No direct match" note in that file.
 
 ---
@@ -97,9 +98,10 @@ Copy `assets/report-template.html` to the output path (Step 6), then use `Edit` 
 | `{{REVIEW_DATE}}` | Today's date, human-readable | `true` (2 occurrences) |
 | `<!-- PLACEHOLDER:PRODUCT_INTRO ... -->` | 2–4 sentences on what the product is/does, written from the evidence — factual, not explaining it back to an owner at length | `false` |
 | `<!-- PLACEHOLDER:STAT_TILES ... -->` | One `.stat-tile` per severity level with ≥1 finding (see example markup in the template comment) | `false` |
-| `<!-- PLACEHOLDER:FINDINGS ... -->` | One `.findings-group` per severity level present (4→1), each containing one `.finding-card` per finding, each with a unique `id="finding-N"` | `false` |
+| `<!-- PLACEHOLDER:FINDINGS ... -->` | One `.findings-group` per severity level present (4→1), each containing one `.finding-card` per finding. Each card needs a unique `id="finding-N"` **and** a visible `<span class="finding-number">Finding N</span>` using the same N — the services section below refers to findings by number, so the number has to actually be printed on the card, not just hidden in the anchor id | `false` |
 | `<!-- PLACEHOLDER:SERVICES_INTRO ... -->` | 1–2 sentences bridging "here's what we found" → "here's how it gets fixed" | `false` |
 | `<!-- PLACEHOLDER:SERVICES_MAPPING ... -->` | One `.service-link-item` per finding/group with a service match, linking back to `#finding-N` | `false` |
+| `<!-- PLACEHOLDER:FULL_SERVICES_LIST ... -->` | Read `references/services.md` and render every service, grouped under its category headings, as `.service-card`s inside `.service-cards-grid`s — use the plain-English description already written there verbatim, don't compress it back to just a service name | `false` |
 
 For each finding card's `<img class="finding-screenshot">`, embed the actual screenshot as a base64 data URI (`data:image/png;base64,...`) reading the file from the evidence folder — the report must be a single self-contained HTML file with no external file references, so it can be dropped straight into any hosting setup. If a finding has no relevant screenshot, omit the `<img>` tag entirely rather than leaving a broken reference.
 
@@ -121,3 +123,4 @@ If the user wants a quick shareable preview rather than the raw file, offer to p
 - **Don't inflate severity.** Client-facing credibility depends on the ratings being defensible, not dramatic. Reserve 4 (catastrophe) for things that genuinely block a task or would embarrass the client in front of their own users.
 - **Services list changes over time** — always re-read `references/services.md` at Step 4 rather than relying on anything cached from a previous run; Ollie edits that file directly when his offerings change.
 - **If evidence gathering fails** for a page (site blocks automated browsers, requires login, etc.), tell the user which page failed and why before proceeding with whatever pages did succeed — don't silently drop it from scope.
+- **No `mailto:` links, anywhere.** Ollie doesn't want email links that pop open a mail app — the template's contact points are copy-to-clipboard widgets (matching the pattern on olliebarr.com's own homepage/footer), not links. Don't add a `mailto:` href if you're editing the template or writing new contact copy.

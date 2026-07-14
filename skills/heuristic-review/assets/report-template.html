@@ -88,12 +88,13 @@
 
   mark { background-color: var(--color-mark); color: #000000; padding: 0; border-radius: 0; }
 
-  .wrap { max-width: var(--container-wide); margin: 0 auto; padding: 0 1.5rem; }
-  .prose { max-width: var(--container-prose); margin: 0 auto; padding: 0 1.5rem; }
+  .wrap { max-width: var(--container-wide); margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
+  .prose { max-width: var(--container-prose); margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
 
-  .section { padding: var(--space-section) 0; }
-  .section--tight { padding: calc(var(--space-section) / 2) 0; }
-  .section--surface { background: var(--color-surface); }
+  .section { padding-top: var(--space-section); padding-bottom: var(--space-section); }
+  .section--tight { padding-top: calc(var(--space-section) / 2); padding-bottom: calc(var(--space-section) / 2); }
+  .section--surface { background: var(--color-surface); padding-left: 2.5rem; padding-right: 2.5rem; }
+  @media (max-width: 599px) { .section--surface { padding-left: 1.5rem; padding-right: 1.5rem; } }
 
   /* Masthead */
   .masthead { padding: 48px 0 var(--space-section); border-bottom: 1px solid var(--color-surface); }
@@ -161,6 +162,14 @@
   }
 
   .finding-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .finding-number {
+    font-size: 0.8rem;
+    font-weight: var(--weight-bold);
+    background: var(--color-background);
+    border: 1px solid var(--color-text);
+    border-radius: var(--button-radius);
+    padding: 0.2rem 0.6rem;
+  }
   .severity-badge {
     font-size: 0.8rem;
     font-weight: var(--weight-bold);
@@ -194,10 +203,14 @@
   .service-link-item p + p { margin-top: 0.35rem; }
   .service-link-item a { font-weight: var(--weight-bold); }
 
-  .full-services-list { margin-top: 2rem; }
-  .full-services-list ul { columns: 2; column-gap: 2rem; padding-left: 1.25rem; }
-  @media (max-width: 699px) { .full-services-list ul { columns: 1; } }
-  .full-services-list li { break-inside: avoid; margin-bottom: 0.5rem; font-size: var(--text-body); }
+  .full-services-list { margin-top: 2.5rem; }
+  .service-groups { display: flex; flex-direction: column; gap: 2.5rem; margin-top: 1.5rem; }
+  .service-group-heading { font-size: 1.15rem; margin-bottom: 0.35rem; }
+  .service-group-desc { font-size: 0.9rem; color: var(--color-secondary); margin-bottom: 1rem; }
+  .service-cards-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .service-card { background: var(--color-surface); padding: 1.25rem 1.5rem; }
+  .service-card-title { font-size: var(--text-body); font-weight: var(--weight-heading); margin-bottom: 0.4rem; }
+  .service-card-desc { font-size: 0.9rem; color: var(--color-text); }
 
   .button {
     display: inline-block;
@@ -213,8 +226,47 @@
   }
   .button:hover { background: var(--color-accent-aaa); border-color: var(--color-accent-aaa); color: var(--color-background); }
 
-  .cta-row { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
-  .cta-note { font-size: 0.9rem; color: var(--color-secondary); }
+  .cta-row { margin-top: 2rem; }
+  .cta-intro { font-size: var(--text-body); margin-bottom: 1rem; }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .copy-email-wrap { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .copy-email { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .copy-email-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    margin: -0.25rem;
+    border: none;
+    background: none;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .copy-email-button:hover { color: var(--color-accent); }
+  .copy-email-button.is-copied { color: var(--color-accent); }
+  .copy-feedback {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-accent);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .copy-feedback.is-visible { opacity: 1; }
+  .footer-links .copy-email-wrap { font-size: 0.9rem; color: var(--color-secondary); }
 
   /* Footer */
   .report-footer {
@@ -260,7 +312,7 @@
   <h2>What is a heuristic review?</h2>
   <p>A heuristic review is a structured expert evaluation of a product's usability, measured against ten well-established principles of good interface design (Jakob Nielsen's 10 Usability Heuristics). Rather than testing with real users, independent reviewers each examine the product and flag anywhere it works against those principles — then compare notes to separate the issues that matter most from the ones that are easy for any one person to miss.</p>
   <p>This report used five independent reviewers, each looking at the product through a different lens: accessibility, usability &amp; flow, legibility &amp; readability, colour &amp; visual contrast, and content clarity. Where more than one reviewer independently flagged the same issue, that's noted below — it's a strong signal the problem is real and worth prioritising.</p>
-  <p>Heuristic reviews are fast, low-cost, and catch a large share of usability problems before you invest in full user testing or a redesign. They're not a replacement for testing with real users, but they're an efficient first pass that shows you where to focus.</p>
+  <p>Heuristic reviews catch a large share of usability problems before you invest in full user testing or a redesign. They're not a replacement for testing with real users, but they're an efficient first pass that shows you where to focus.</p>
   <p class="source-note">Methodology: <a href="https://www.nngroup.com/articles/how-to-conduct-a-heuristic-evaluation/" target="_blank" rel="noopener">Nielsen Norman Group, "How to Conduct a Heuristic Evaluation"</a> · Heuristics: <a href="https://www.nngroup.com/articles/ten-usability-heuristics/" target="_blank" rel="noopener">"10 Usability Heuristics for User Interface Design"</a></p>
 </section>
 
@@ -294,6 +346,7 @@
 
       <article class="finding-card" id="finding-1">
         <div class="finding-meta">
+          <span class="finding-number">Finding 1</span>
           <span class="severity-badge badge-4">4 · Catastrophe</span>
           <span class="heuristic-tag">Heuristic 3: User control and freedom</span>
           <span class="confirmation-tag">Flagged by 3 of 5 reviewers</span>
@@ -311,7 +364,10 @@
   Notes:
   - Omit .confirmation-tag entirely if only one reviewer flagged it.
   - Omit .finding-screenshot if no relevant screenshot exists — don't leave a broken image.
-  - Give every finding-card a unique id="finding-N" so the closing services section can link to it.
+  - Give every finding-card a unique id="finding-N" so the closing services section can link
+    to it, AND a matching visible <span class="finding-number">Finding N</span> — the services
+    section refers to findings by number, so the number must be visible on the card itself,
+    not just hidden in the anchor id.
   -->
 
 </section>
@@ -337,26 +393,48 @@
 
   <div class="full-services-list">
     <p><strong>Full list of services:</strong></p>
-    <ul>
-      <li>Conversion funnel audit (checkout, signup, booking, trial)</li>
-      <li>Usability testing (moderated / unmoderated + findings report)</li>
-      <li>Accessibility audit (WCAG spot-check)</li>
-      <li>Information architecture review</li>
-      <li>Form design audit or redesign</li>
-      <li>Microcopy / UX writing pass (errors, empty states, CTAs)</li>
-      <li>Onboarding flow audit or redesign</li>
-      <li>Competitive UX benchmarking (you vs. 2–3 competitors)</li>
-      <li>Landing page conversion audit</li>
-      <li>Card sort / IA workshop</li>
-      <li>Design system consistency audit</li>
-      <li>Wireframe or prototype for one specific flow fix</li>
-      <li>Persona / user journey mapping session</li>
-    </ul>
+    <div class="service-groups">
+      <!-- PLACEHOLDER:FULL_SERVICES_LIST
+           Read references/services.md and render every service it lists,
+           grouped under its category headings, as cards. Use the plain-
+           English description already written there — don't shorten it
+           back down to just the service name. Example structure for one
+           group:
+
+      <div class="service-group">
+        <h3 class="service-group-heading">Audits</h3>
+        <p class="service-group-desc">Category-level one-liner from services.md.</p>
+        <div class="service-cards-grid">
+          <div class="service-card">
+            <p class="service-card-title">Conversion funnel audit</p>
+            <p class="service-card-desc">Plain-English explanation of what it entails and why it's useful.</p>
+          </div>
+        </div>
+      </div>
+      -->
+    </div>
   </div>
 
   <div class="cta-row">
-    <a class="button" href="mailto:olliebarr@hotmail.co.uk?subject=UX%20review%20follow-up">Get in touch</a>
-    <p class="cta-note">olliebarr@hotmail.co.uk — happy to talk through any of this, no obligation.</p>
+    <p class="cta-intro">Want to talk through any of this? No obligation — copy my email below.</p>
+    <p class="copy-email-wrap">
+      <span>olliebarr@hotmail.co.uk</span>
+      <span class="copy-email">
+        <button type="button" class="copy-email-button" data-email="olliebarr@hotmail.co.uk">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9z M5 15V5h10"></path>
+          </svg>
+          <span class="sr-only">Copy email address to clipboard</span>
+        </button>
+        <span class="copy-feedback" aria-hidden="true">
+          Copied
+          <svg width="14" height="14" viewBox="0 0 24 24" focusable="false">
+            <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M4 12l6 6L20 6"></path>
+          </svg>
+        </span>
+        <span class="sr-only" role="status" aria-live="polite" data-copy-status></span>
+      </span>
+    </p>
   </div>
 </section>
 
@@ -366,10 +444,46 @@
     <div class="footer-links">
       <a href="https://www.olliebarr.com/">olliebarr.com</a>
       <a href="https://www.linkedin.com/in/ollie-barr/" target="_blank" rel="noopener nofollow">LinkedIn</a>
-      <a href="mailto:olliebarr@hotmail.co.uk">olliebarr@hotmail.co.uk</a>
+      <span class="copy-email-wrap">
+        <span>olliebarr@hotmail.co.uk</span>
+        <span class="copy-email">
+          <button type="button" class="copy-email-button" data-email="olliebarr@hotmail.co.uk">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9z M5 15V5h10"></path>
+            </svg>
+            <span class="sr-only">Copy email address to clipboard</span>
+          </button>
+          <span class="copy-feedback" aria-hidden="true">Copied</span>
+          <span class="sr-only" role="status" aria-live="polite" data-copy-status></span>
+        </span>
+      </span>
     </div>
   </div>
 </footer>
+
+<script>
+  document.querySelectorAll('.copy-email-button').forEach(function (button) {
+    var wrapper = button.closest('.copy-email');
+    var feedback = wrapper ? wrapper.querySelector('.copy-feedback') : null;
+    var status = wrapper ? wrapper.querySelector('[data-copy-status]') : null;
+    var hideFeedback;
+    button.addEventListener('click', function () {
+      var email = button.dataset.email || '';
+      navigator.clipboard.writeText(email).then(function () {
+        if (status) status.textContent = 'Email address copied to clipboard';
+        button.classList.add('is-copied');
+        if (feedback) feedback.classList.add('is-visible');
+        clearTimeout(hideFeedback);
+        hideFeedback = setTimeout(function () {
+          button.classList.remove('is-copied');
+          if (feedback) feedback.classList.remove('is-visible');
+        }, 2000);
+      }).catch(function () {
+        if (status) status.textContent = 'Could not copy email address';
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
